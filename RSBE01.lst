@@ -488,15 +488,15 @@ CC008000:WGPIPE
 27,1,00038C78:__dt__8clTargetFv
 
 // soArrayVectorCalculator
-27,1,000C275C:erase__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfaceUlUlUlUlUl
-27,1,000C261C:insert__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfaceUlbUlUlUlUl
-27,1,000C2954:push__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfacebUlUlUl
-27,1,000C285C:unshift__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfacebUlUlUl
-27,1,000C2A88:clear__23soArrayVectorCalculatorFP26soArrayVectorCalcInterface
-27,1,000C29F4:pop__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfacebUlUl
-27,1,000C28EC:shift__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfacebUlUl
-27,1,000C2AF0:postInitialize__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfaceUlUl
-27,1,000C2B5C:resize__23soArrayVectorCalculatorFP26soArrayVectorCalcInterfaceUlbbUlUlUl
+27,1,000C275C:erase__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacelllll
+27,1,000C261C:insert__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacelbllll
+27,1,000C2954:push__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfaceblll
+27,1,000C285C:unshift__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfaceblll
+27,1,000C2A88:clear__23soArrayVectorCalculatorFR26soArrayVectorCalcInterface
+27,1,000C29F4:pop__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacebll
+27,1,000C28EC:shift__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacebll
+27,1,000C2AF0:postInitialize__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacell
+27,1,000C2B5C:resize__23soArrayVectorCalculatorFR26soArrayVectorCalcInterfacelbblll
 
 // soArrayList
 27,1,0021cb30:at__18soArrayList<Ul,32>Fl
@@ -506,10 +506,10 @@ CC008000:WGPIPE
 27,1,0025eccc:shift__18soArrayList<Ul,32>Fv
 27,1,0025ed08:push__18soArrayList<Ul,32>FRCUl
 27,1,0025ed78:pop__18soArrayList<Ul,32>Fv
-27,1,0025edcc:insert__18soArrayList<Ul,32>FUlRCUl
-27,1,0025ee24:erase__18soArrayList<Ul,32>FUl
-27,1,0025ee5c:isFull__18soArrayList<Ul,32>Fv
-27,1,0025ee6c:set__18soArrayList<Ul,32>FUlRCUlUl
+27,1,0025edcc:insert__18soArrayList<Ul,32>FlRCUl
+27,1,0025ee24:erase__18soArrayList<Ul,32>Fl
+27,1,0025ee5c:isFull__18soArrayList<Ul,32>CFv
+27,1,0025ee6c:set__18soArrayList<Ul,32>FlRCUll
 27,1,0025ef44:isNull__18soArrayList<Ul,32>CFv
 
 // soEventSystem

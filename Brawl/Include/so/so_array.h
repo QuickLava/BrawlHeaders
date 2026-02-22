@@ -67,7 +67,7 @@ public:
         this->m_link = other.m_link;
         m_elements = other.m_elements;
         m_size = other.m_size;
-        if (other.m_elements == nullptr){
+        if (other.m_elements == nullptr) {
             m_size = 0;
         }
         return *this;
@@ -128,7 +128,7 @@ public:
 };
 
 template<typename T>
-class soArrayContractibleTableNull : public soArrayContractible<T> {
+class soArrayContractibleNull : public soArrayContractible<T> {
 
 public:
     bool isNull() const { return true; }
@@ -143,7 +143,7 @@ public:
     virtual s32 size() const {
         return 0;
     }
-    virtual ~soArrayContractibleTableNull() { }
+    virtual ~soArrayContractibleNull() { }
     virtual void shift() { }
     virtual void pop() { }
     virtual void clear() { }
@@ -156,8 +156,8 @@ public:
 
     virtual void unshift(const T&) = 0;
     virtual void push(const T&) = 0;
-    virtual void insert(u32, const T&) = 0;
-    virtual void erase(u32) = 0;
+    virtual void insert(s32, const T&) = 0;
+    virtual void erase(s32) = 0;
     virtual s32 capacity() const = 0;
     virtual bool isFull() const = 0;
     virtual void set(s32 startingIndex, const T& element, s32 numIndicesToSet) = 0;
@@ -183,15 +183,15 @@ public:
     virtual void clear() { return; }
     virtual void unshift(const T&) { return; }
     virtual void push(const T&) { return; }
-    virtual void insert(u32, const T&) { return; }
-    virtual void erase(u32) { return; }
+    virtual void insert(s32, const T&) { return; }
+    virtual void erase(s32) { return; }
     virtual s32 capacity() const { return 0; }
     virtual bool isFull() const { return true; }
     virtual void set(s32 startingIndex, const T& element, s32 numIndicesToSet) { }
 
     soArrayNull() { }
-    soArrayNull(u32 size, u32) { }
-    soArrayNull(u32 size, const T& element, u32) { }
+    soArrayNull(s32 size, s32) { }
+    soArrayNull(s32 size, const T& element, s32) { }
 };
 
 template <typename ElementTy, typename IndexTy>
@@ -262,7 +262,7 @@ public:
 // Each unit has a logical "position" corresponding to an actual "index"
 // in the internal array. This distinction is implemented via an intrusive
 // doubly-linked list connecting the units; so getArrayIndex for details.
-template <typename T, u32 C>
+template <typename T, s32 C>
 class soArrayList : public soArray<T> {
     // The index of the next available free unit in the list
     s32 m_freeIndex : sizeof(bit_width<C>) + 1;
@@ -384,14 +384,14 @@ public:
 
     // Insert elm at position i of the list, if i is in range and space is
     // available
-    virtual void insert(u32 pos, const T& elm) {
+    virtual void insert(s32 pos, const T& elm) {
         s32 idx = insertSub(pos - 1);
         if (idx >= 0)
             m_units[idx].m_element = elm;
     }
 
     // Erase the element at position pos
-    virtual void erase(u32 pos) {
+    virtual void erase(s32 pos) {
         eraseSub(getArrayIndex(pos));
     }
 
@@ -436,7 +436,7 @@ public:
     soArrayListUnit<T, s8>* getUnits() { return m_units; }
 };
 
-template <typename T, u32 C>
+template <typename T, s32 C>
 s32 soArrayList<T, C>::shiftFreeArrayIndex(s32 idx) {
     if (isFull() == true)
         return End;
@@ -474,7 +474,7 @@ s32 soArrayList<T, C>::shiftFreeArrayIndex(s32 idx) {
     return idx;
 }
 
-template <typename T, u32 C>
+template <typename T, s32 C>
 s32 soArrayList<T, C>::getArrayIndex(s32 pos) const {
     if (pos < 0 || pos >= size())
         return End;
@@ -502,7 +502,7 @@ s32 soArrayList<T, C>::getArrayIndex(s32 pos) const {
     return End;
 }
 
-template <typename T, u32 C>
+template <typename T, s32 C>
 s32 soArrayList<T, C>::insertSub(s32 prevPos, s32 where) {
     s32 prevIdx = End;
     if (prevPos >= 0) {
@@ -535,7 +535,7 @@ s32 soArrayList<T, C>::insertSub(s32 prevPos, s32 where) {
     return freeIdx;
 }
 
-template <typename T, u32 C>
+template <typename T, s32 C>
 void soArrayList<T, C>::eraseSub(s32 idx) {
     if (idx < 0 || idx >= capacity())
         return;
@@ -564,11 +564,11 @@ void soArrayList<T, C>::eraseSub(s32 idx) {
 
 class soArrayVectorCalcInterface {
 public:
-    virtual void substitution(u32, u32) = 0;
+    virtual void substitution(s32, s32) = 0;
     virtual void onFull() = 0;
     virtual void offFull() = 0;
-    virtual void setTopIndex(u32) = 0;
-    virtual void setLastIndex(u32) = 0;
+    virtual void setTopIndex(s32) = 0;
+    virtual void setLastIndex(s32) = 0;
     virtual ~soArrayVectorCalcInterface() { }
 };
 
@@ -586,67 +586,65 @@ public:
     }
     virtual ~soArrayVectorAbstract() { }
     virtual void shift() {
-        soArrayVectorCalculator::shift(this, this->isEmpty(), this->capacity(), this->getTopIndex());
+        soArrayVectorCalculator::shift(*this, this->isEmpty(), this->capacity(), this->getTopIndex());
         this->setSize(this->size() - 1);
     }
     virtual void pop() {
-        soArrayVectorCalculator::pop(this, this->isEmpty(), this->capacity(), this->getLastIndex());
+        soArrayVectorCalculator::pop(*this, this->isEmpty(), this->capacity(), this->getLastIndex());
         this->setSize(this->size() - 1);
     }
     virtual void clear() {
-        soArrayVectorCalculator::clear(this);
+        soArrayVectorCalculator::clear(*this);
         this->setSize(0);
     }
     virtual void unshift(const T& newElement) {
-        u32 topIndex = soArrayVectorCalculator::unshift(this, this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
-        T* element = this->getArrayValueConst(topIndex);
-        *element = newElement;
+        s32 topIndex = soArrayVectorCalculator::unshift(*this, this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
+        T& element = this->getArrayValueConst(topIndex);
+        element = newElement;
         this->setSize(this->size() + 1);
     }
     virtual void push(const T& newElement) {
-        u32 lastIndex = soArrayVectorCalculator::push(this, this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
-        T* element = this->getArrayValueConst(lastIndex);
-        *element = newElement;
+        s32 lastIndex = soArrayVectorCalculator::push(*this, this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
+        T& element = this->getArrayValueConst(lastIndex);
+        element = newElement;
         this->setSize(this->size() + 1);
     }
-    virtual void insert(u32 index, const T& newElement) {
-        u32 lastIndex = soArrayVectorCalculator::insert(this, index, this->isFull(), this->size(), this->capacity(), this->getTopIndex(), this->getLastIndex());
-        T* element = this->getArrayValueConst(lastIndex);
-        *element = newElement;
+    virtual void insert(s32 index, const T& newElement) {
+        s32 lastIndex = soArrayVectorCalculator::insert(*this, index, this->isFull(), this->size(), this->capacity(), this->getTopIndex(), this->getLastIndex());
+        T& element = this->getArrayValueConst(lastIndex);
+        element = newElement;
         this->setSize(this->size() + 1);
     }
-    virtual void erase(u32 index) {
-        soArrayVectorCalculator::erase(this, index, this->size(), this->capacity(), this->getTopIndex(), this->getLastIndex());
+    virtual void erase(s32 index) {
+        soArrayVectorCalculator::erase(*this, index, this->size(), this->capacity(), this->getTopIndex(), this->getLastIndex());
         this->setSize(this->size() - 1);
     }
     virtual s32 capacity() const = 0;
-    virtual void set(s32 startingIndex, const T& elementToCopy, s32 numIndicesToSet) {
-        if (this->size() <= startingIndex + numIndicesToSet) {
-            numIndicesToSet = this->size() - startingIndex;
-        }
-        for (u32 i = 0; i < numIndicesToSet; i++) {
-            T& element = this->at(i + startingIndex);
-            element = elementToCopy;
-        }
+
+    virtual void set(s32 start, const T& elm, s32 count) {
+        s32 sz = this->size();
+        s32 end = ((count + start >= sz) ? this->size() - start : count) + start;
+        for (s32 i = 0; i < end-start; i++)
+            this->at(start+i) = elm;
     }
 
     virtual T& atFastAbstractSub(s32 index) const = 0;
-    virtual void substitution(u32 subIndex, u32 targetIndex) {
-        T* subElement = this->getArrayValueConst(subIndex);
-        T* targetElement = this->getArrayValueConst(targetIndex);
-        *targetElement = *subElement;
+    virtual void substitution(s32 subIndex, s32 targetIndex) {
+        T& subElement = this->getArrayValueConst(subIndex);
+        T& targetElement = this->getArrayValueConst(targetIndex);
+        targetElement = subElement;
     }
-    virtual T* getArrayValueConst(u32) = 0;
-    virtual u32 getTopIndex() = 0;
-    virtual u32 getLastIndex() = 0;
-    virtual void setSize(u32) = 0;
+    virtual T& getArrayValueConst(s32) = 0;
+    virtual s32 getTopIndex() const = 0;
+    virtual s32 getLastIndex() const = 0;
+    virtual void setSize(s32) = 0;
 };
 
 template <class T, s32 C>
 class soArrayVector : public soArrayVectorAbstract<T> {
     s32 m_topIndex : sizeof(bit_width<C>) + 1;
     s32 m_lastIndex : sizeof(bit_width<C>) + 1;
-    u32 m_size : sizeof(bit_width<C>) + 1;
+    s32 m_size : sizeof(bit_width<C>) + 1;
     u32 m_isFull : 1;
 
     T m_elements[C];
@@ -660,32 +658,32 @@ public:
     virtual T& atFastAbstractSub(s32 index) const {
         return atFast(index);
     }
-    virtual T* getArrayValueConst(u32 index) {
-        return &this->m_elements[index];
+    virtual T& getArrayValueConst(s32 index) {
+        return this->m_elements[index];
     }
-    virtual u32 getTopIndex() { return m_topIndex; }
-    virtual u32 getLastIndex() { return m_lastIndex; }
-    virtual void setSize(u32 size) { m_size = size; }
-    virtual void setTopIndex(u32 topIndex) { m_topIndex = topIndex; }
-    virtual void setLastIndex(u32 lastIndex) { m_lastIndex = lastIndex; }
+    virtual s32 getTopIndex() const { return m_topIndex; }
+    virtual s32 getLastIndex() const { return m_lastIndex; }
+    virtual void setSize(s32 size) { m_size = size; }
+    virtual void setTopIndex(s32 topIndex) { m_topIndex = topIndex; }
+    virtual void setLastIndex(s32 lastIndex) { m_lastIndex = lastIndex; }
     virtual void onFull() { m_isFull = true; }
     virtual void offFull() { m_isFull = false; }
 
     soArrayVector() : m_topIndex(0), m_lastIndex(0), m_size(0), m_isFull(false) { }
 
-    soArrayVector(u32 size, u32) {
+    soArrayVector(s32 size, s32) {
         m_topIndex = 0;
         m_lastIndex = 0;
         m_isFull = false;
         m_size = size;
-        soArrayVectorCalculator::postInitialize(this, size, C);
+        soArrayVectorCalculator::postInitialize(*this, size, C);
     }
-    soArrayVector(u32 size, const T& element, u32) {
+    soArrayVector(s32 size, const T& element, s32) {
         m_topIndex = 0;
         m_lastIndex = 0;
         m_size = 0;
         m_isFull = false;
-        size = soArrayVectorCalculator::resize(this, size, this->isEmpty(), this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
+        size = soArrayVectorCalculator::resize(*this, size, this->isEmpty(), this->isFull(), this->capacity(), this->getTopIndex(), this->getLastIndex());
         for (u32 i = 0; i < size; i++) {
             this->push(element);
         }
@@ -702,8 +700,8 @@ template <class T>
 class soArrayVector<T, 0> : public soArrayNull<T> {
 public:
     inline soArrayVector() : soArrayNull<T>() { }
-    inline soArrayVector(u32 size, u32 unk) : soArrayNull<T>(size, unk) { }
-    inline soArrayVector(u32 size, const T& element, u32 unk) : soArrayNull<T>(size, element, unk) { }
+    inline soArrayVector(s32 size, s32 unk) : soArrayNull<T>(size, unk) { }
+    inline soArrayVector(s32 size, const T& element, s32 unk) : soArrayNull<T>(size, element, unk) { }
 };
 
 extern soArrayNull<s32> g_s32ArrayNull;

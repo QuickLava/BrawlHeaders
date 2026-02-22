@@ -22,6 +22,7 @@ struct acCmdInterpreterStackData {
     // knd0: used for isBreakInterpret, Wait
     // knd7: if unk30Field2 = 2, used for Wait to determine how much to wait, if at all
     enum Kind {
+        Invalid = -1,
         knd0 = 0,
         Frame = 1,
         Loop = 2,
@@ -32,12 +33,13 @@ struct acCmdInterpreterStackData {
         knd7 = 7,
     };
 
-    acCmdInterpreterStackData(Kind knd, s32 id, u8 bd, const acAnimCmdConv* ad, float fd) :
+    acCmdInterpreterStackData(Kind knd = Invalid, s32 id = 0, bool bd = false,
+                              const acAnimCmdConv* ad = nullptr, float fd = 0.0f) :
         kind(knd), intData(id), boolData(bd), addressData(ad), floatData(fd) { }
 
     Kind kind;
     s32 intData; // Loop count, or result of dispatchCmdSwitch
-    u8 boolData; // If condition result, "found Case" flag for Switch
+    bool boolData; // If condition result, "found Case" flag for Switch
     const acAnimCmdConv* addressData; // target address for jumps
     float floatData; // some data for wait time calculations
 };

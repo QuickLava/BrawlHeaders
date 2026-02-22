@@ -44,6 +44,20 @@ public:
 static_assert(sizeof(soAnimCmd) == 0x8, "Class is the wrong size!");
 
 struct soAnimCmdAddressPack {
-    char _0x0[0xc];
+    u32 unk0;
+    u32 unk4;
+    u32 unk8;
+
+    soAnimCmdAddressPack& operator=(const soAnimCmdAddressPack& orig) {
+        if (this != &orig) {
+            u32 addr3 = orig.unk8;
+            u32 addr2 = orig.unk4;
+            u32 addr1 = orig.unk0;
+            unk0 = addr1;
+            unk4 = addr2;
+            unk8 = addr3;
+        }
+        return *this;
+    }
 };
 static_assert(sizeof(soAnimCmdAddressPack) == 0xc, "Class is the wrong size!");
