@@ -9,19 +9,21 @@
 #include <types.h>
 
 class ecMgr : public gfTask {
-
-private:
-    char unk[0x68];
-
 public:
+    u8 unk40[0x50];
+    u32 unk90;
+    u32 unk94;
+    u8 unk98[0x10];
+
     ecMgr();
     void setDrawPrio(int prio);
     u32 setEffect(EfID effectID);
     u32 setEffect(EfID effectID, Vec3f* pos);
-    u32 setEffect(EfID effectID, Vec3f* pos, Vec3f* rot, Vec3f* scale);
+    u32 setEffect(EfID effectID, const Vec3f* pos, const Vec3f* rot, const Vec3f* scale);
     void endEffect(u32);
     void killEffect(u32, u32, u32);
     void setParent(u32 unk, nw4r::g3d::ScnMdl*, const char*, int);
+    void setParent2(u32 unk, nw4r::g3d::ScnMdl*, const char*, int); // FIXME: overload
     void preSetAnmIdx(int chrIndex, int visIndex, int patIndex, int srtIndex, int clrIndex, int shpIndex);
     void setGroundAttach(u32, soGroundModule* groundModule);
     void setGroundAttach(u32, grCollisionLineWork* lineWork);
