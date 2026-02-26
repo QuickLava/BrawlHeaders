@@ -83,3 +83,5 @@ public:
     static gfModuleManager* getInstance();
 };
 static_assert(sizeof(gfModuleManager) == 968, "Class is wrong size!");
+
+extern gfModuleManager* g_gfModuleManager;
