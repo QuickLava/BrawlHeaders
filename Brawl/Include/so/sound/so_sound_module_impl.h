@@ -53,7 +53,7 @@ public:
     virtual void setSEVol(float, int, int);
     virtual float getSEVol(int);
     virtual void setSEPitch(float);
-    virtual void setSEPitch(int);
+    virtual void setSEPitch(u32, double);
     virtual float getSEPitch();
     virtual void stopSE(int, int);
     virtual void stopSEHandle(int);
@@ -100,7 +100,7 @@ public:
     virtual void setSEVol(float, int, int);
     virtual float getSEVol(int);
     virtual void setSEPitch(float);
-    virtual void setSEPitch(int);
+    virtual void setSEPitch(u32, double);
     virtual float getSEPitch();
     virtual void stopSE(int, int);
     virtual void stopSEHandle(int);
