@@ -691,6 +691,11 @@ CC008000:WGPIPE
 27,1,0025ee6c:set__18soArrayList<Ul,32>FlRCUll
 27,1,0025ef44:isNull__18soArrayList<Ul,32>CFv
 
+27,1,000735C8:getInt__16soAnimCmdArgListFUl
+27,1,000736B8:getFloat__16soAnimCmdArgListFUl
+27,1,000737DC:getBool__16soAnimCmdArgListFUl
+27,1,0007388C:getValueIndex__16soAnimCmdArgListFUl
+
 // soEventSystem
 27,1,0008F064:getInstance__13soEventSystemFv
 27,1,0008F1BC:getManager__13soEventSystemFl
