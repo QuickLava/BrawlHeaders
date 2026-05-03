@@ -4,7 +4,6 @@
 #include <so/so_array.h>
 #include <so/so_null.h>
 #include <types.h>
-#include <so/anim/so_anim_cmd_arg_list.h>
 
 // TODO: confirm class name
 struct acCmdArgConv {
@@ -68,6 +67,19 @@ struct acAnimCmdConv
     const acCmdArgConv* args;
 };
 
+// Currently, no real functions use this wrapper class.
+// TODO: Confirm that this is really acCmdArgList, and
+// use it in a legitimate way
+struct acCmdArgList {
+    soArrayContractibleTable<const acCmdArgConv> argList;
+
+    acCmdArgList() : argList() { }
+    acCmdArgList(const acCmdArgConv* p1, s32 p2) : argList(p1, p2) { }
+
+    ~acCmdArgList() { }
+    bool isEmpty() const { return argList.isEmpty(); }
+};
+
 class acAnimCmd : public soNullable {
 public:
     acAnimCmd() : soNullable(false) { }
@@ -77,7 +89,7 @@ public:
     virtual s8 getType() const = 0;
     virtual s32 getArgNum() const = 0;
     virtual u8 getOption() const = 0;
-    virtual soAnimCmdArgList getArgList() = 0;
+    virtual soArrayContractibleTable<const acCmdArgConv> getArgList() = 0;
     virtual bool getArg(acCmdArg* arg, s32 index) const = 0;
     virtual const acAnimCmdConv* getCmdAddress() const = 0;
     virtual bool isArgEmpty() const = 0;
@@ -94,7 +106,7 @@ public:
     virtual s8 getType() const;
     virtual s32 getArgNum() const;
     virtual u8 getOption() const;
-    virtual soAnimCmdArgList getArgList();
+    virtual soArrayContractibleTable<const acCmdArgConv> getArgList();
     virtual bool getArg(acCmdArg* arg, s32 index) const;
     virtual const acAnimCmdConv* getCmdAddress() const { return cmdAddr; }
     virtual bool isArgEmpty() const;
@@ -103,7 +115,7 @@ public:
 
     // TODO: made up deadstripped function to make soArrayFixed::isEmpty
     // get emitted earlier
-    soArrayContractibleTable<const acCmdArgConv> getEmptyArgList();
+    acCmdArgList getEmptyArgList();
 };
 static_assert(sizeof(acAnimCmdImpl) == 0xC, "Class is the wrong size!");
 
@@ -115,7 +127,7 @@ public:
     virtual s8 getType() const;
     virtual s32 getArgNum() const;
     virtual u8 getOption() const;
-    virtual soAnimCmdArgList getArgList();
+    virtual soArrayContractibleTable<const acCmdArgConv> getArgList();
     virtual bool getArg(acCmdArg* arg, s32 index) const;
     virtual const acAnimCmdConv* getCmdAddress() const;
     virtual bool isArgEmpty() const;
