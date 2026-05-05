@@ -241,4 +241,10 @@ namespace Stages {
     };
 }; // namespace Stages
 
+namespace Fighters {
+    enum ftFighterKind {
+        // TODO: Add enumerators for each fighter REL
+    };
+} // namespace Fighters
+
 typedef Stages::srStageKind srStageKind;
